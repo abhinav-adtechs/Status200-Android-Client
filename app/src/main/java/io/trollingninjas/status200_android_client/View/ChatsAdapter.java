@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -35,12 +36,17 @@ public class ChatsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_rv_chats, parent, false) ;
             return new ChatsViewHolder(itemView);
-        }else {
+        }else if (viewType == Constants.LIST_TYPE_RESPONSE){
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_rv_chat_response, parent, false) ;
             return new ChatResponseViewHolder(itemView) ;
+        } else if (viewType == Constants.LIST_TYPE_RESPONSE_IMAGE){
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_rv_chat_response_image, parent, false) ;
+            return new ChatResponseImageViewHolder(itemView) ;
         }
 
+        return null;
     }
 
     @Override
@@ -57,6 +63,10 @@ public class ChatsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             holderResponse.tvChatResponse.setText(chatsList.get(position).getChatMessage());
             holderResponse.tvChatResponse.setGravity(Gravity.LEFT);
+        }else if (getItemViewType(position) == Constants.LIST_TYPE_RESPONSE_IMAGE){
+
+            ChatResponseImageViewHolder holderResponseImage = (ChatResponseImageViewHolder) holder ;
+            holderResponseImage.ivImage.setImageResource(chatsList.get(position).getImageResource());
         }
     }
 
@@ -91,5 +101,16 @@ public class ChatsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public int getItemViewType(int position) {
         return chatsList.get(position).getViewType() ;
+    }
+
+    public class ChatResponseImageViewHolder extends RecyclerView.ViewHolder{
+
+        private ImageView ivImage ;
+
+        public ChatResponseImageViewHolder(View itemView) {
+            super(itemView);
+
+            ivImage = (ImageView) itemView.findViewById(R.id.item_rv_chat_response_image_iv) ;
+        }
     }
 }

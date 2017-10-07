@@ -8,4 +8,5 @@ abstract public class Constants {
 
     final public static Integer LIST_TYPE_REQUEST = 9010 ;
     final public static Integer LIST_TYPE_RESPONSE = 9011 ;
+    final public static Integer LIST_TYPE_RESPONSE_IMAGE = 9012 ;
 }
