@@ -3,12 +3,15 @@ package io.trollingninjas.status200_android_client.View;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private List<ChatsPOJO> chatsList = new ArrayList<>();
     private ChatsAdapter chatsAdapter ;
+    private LayoutAnimationController controller ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +92,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         chatsAdapter = new ChatsAdapter(this, chatsList) ;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL,  true) ;
         rvChatData.setLayoutManager(layoutManager);
+        controller = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation_fall_down);
+        rvChatData.setLayoutAnimation(controller);
+        rvChatData.setItemAnimator(new DefaultItemAnimator());
         rvChatData.setAdapter(chatsAdapter);
 
         setData() ;
@@ -108,16 +115,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (view.getId()){
             case R.id.activity_main_iv_send:
-                Log.i("TAG", "onClick: " + etQueryText.getText());
+                String query = etQueryText.getText().toString() ;
+                Log.i("TAG", "onClick: " + query);
                 Collections.reverse(chatsList);
-                chatsList.add(new ChatsPOJO(etQueryText.getText().toString(), Constants.LIST_TYPE_REQUEST)) ;
+                chatsList.add(new ChatsPOJO(query, Constants.LIST_TYPE_REQUEST)) ;
                 Collections.reverse(chatsList);
                 chatsAdapter.notifyDataSetChanged();
-
+                getResponse(query) ;
                 etQueryText.setText("");
                 break;
             case R.id.activity_main_iv_microphone:
                 break;
         }
+    }
+
+    private void getResponse(String query) {
+
+        Collections.reverse(chatsList);
+        chatsList.add(new ChatsPOJO("Thanks for asking me: " + query, Constants.LIST_TYPE_RESPONSE)) ;
+        Collections.reverse(chatsList);
+        chatsAdapter.notifyDataSetChanged();
     }
 }
