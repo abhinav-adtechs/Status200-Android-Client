@@ -8,7 +8,7 @@
     <TextView android:id="@+id/item_rv_chats_tv_chat_request"
         android:layout_margin="8dp"
         android:layout_gravity="right"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorPanyeGrey"
         android:padding="10dp"
         android:text="This is my question??"
         android:textSize="16sp"

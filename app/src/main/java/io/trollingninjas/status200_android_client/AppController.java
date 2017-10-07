@@ -5,6 +5,7 @@ import android.app.Application;
 import io.trollingninjas.status200_android_client.Dagger.Components.AppComponent;
 import io.trollingninjas.status200_android_client.Dagger.Components.DaggerAppComponent;
 import io.trollingninjas.status200_android_client.Dagger.Modules.SharedPrefModule;
+import io.trollingninjas.status200_android_client.Model.FontsOverride;
 
 public class AppController extends Application {
 
@@ -17,6 +18,8 @@ public class AppController extends Application {
         this.appComponent = DaggerAppComponent.builder()
                 .sharedPrefModule(new SharedPrefModule(this))
                 .build();
+
+        FontsOverride.setDefaultFont(this, "MONOSPACE", "OpenSans-Light.ttf");
     }
 
     public AppComponent get() {
