@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_rv_chat_response_tv_response"
+    android:padding="8dp"
+    android:textSize="24sp"
+    android:textColor="@color/colorPrimaryDark"
+    android:textStyle="normal"
+    android:text="Hi, this is your response!"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+</TextView>

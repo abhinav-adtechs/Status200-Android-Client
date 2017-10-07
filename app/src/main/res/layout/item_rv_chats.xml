@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <TextView android:id="@+id/item_rv_chats_tv_chat_request"
+        android:layout_margin="8dp"
+        android:layout_gravity="right"
+        android:textColor="@color/colorPrimary"
+        android:padding="10dp"
+        android:text="This is my question??"
+        android:textSize="16sp"
+        android:background="@drawable/tube_answer_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    </TextView>
+</FrameLayout>
