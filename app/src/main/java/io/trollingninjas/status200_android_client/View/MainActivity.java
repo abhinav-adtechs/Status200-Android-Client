@@ -1,7 +1,9 @@
-package io.trollingninjas.status200_android_client;
+package io.trollingninjas.status200_android_client.View;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import io.trollingninjas.status200_android_client.R;
 
 public class MainActivity extends AppCompatActivity {
 
