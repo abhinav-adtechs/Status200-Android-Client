@@ -49,9 +49,12 @@ import javax.crypto.SecretKey;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.trollingninjas.status200_android_client.Model.ApiEndpoints;
 import io.trollingninjas.status200_android_client.Model.ChatsPOJO;
 import io.trollingninjas.status200_android_client.Model.Constants;
 import io.trollingninjas.status200_android_client.Model.FingerprintHandler;
+import io.trollingninjas.status200_android_client.Model.SuccessfulAuthEvent;
+import io.trollingninjas.status200_android_client.Model.VolleyErrorEvent;
 import io.trollingninjas.status200_android_client.R;
 
 
@@ -76,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String KEY_NAME = "keyy";
     LoadingDots loadingDots ;
 
+    ApiEndpoints apiEndpoints ;
 
     /**SUGGESTIONSSSSUGGESTIONSSSSUGGESTIONSSSSUGGESTIONSSS
      * */
@@ -187,10 +191,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setData() {
-        chatsList.add(new ChatsPOJO("Request 1", Constants.LIST_TYPE_REQUEST)) ;
-        chatsList.add(new ChatsPOJO("Yes, one one one one \n one one one", Constants.LIST_TYPE_RESPONSE)) ;
-        chatsList.add(new ChatsPOJO("Request 2 two two ", Constants.LIST_TYPE_REQUEST)) ;
-        chatsList.add(new ChatsPOJO("No, two", Constants.LIST_TYPE_RESPONSE)) ;
+        chatsList.add(new ChatsPOJO(R.drawable.ic_hello, Constants.LIST_TYPE_RESPONSE_IMAGE)) ;
+        chatsList.add(new ChatsPOJO("Hi There!", Constants.LIST_TYPE_RESPONSE)) ;
+        chatsList.add(new ChatsPOJO("What can I do for you today?", Constants.LIST_TYPE_RESPONSE)) ;
         Collections.reverse(chatsList);
 
         chatsAdapter.notifyDataSetChanged();
@@ -219,31 +222,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rvSuggestion.setVisibility(View.INVISIBLE);
         loadingDots.setAutoPlay(true);
         loadingDots.setVisibility(View.VISIBLE);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadingDots.setAutoPlay(false);
-                loadingDots.setVisibility(View.GONE);
-                rvSuggestion.setVisibility(View.VISIBLE);
 
-                Collections.reverse(chatsList);
-                chatsList.add(new ChatsPOJO("Thanks for asking me: " + query, Constants.LIST_TYPE_RESPONSE)) ;
-                Collections.reverse(chatsList);
-                if (query.contains("Login")){
-                    try {
-                        getFingerprintAuth();
-                    } catch (java.security.cert.CertificateException e) {
-                        e.printStackTrace();
-                    }
-                }
-                chatsAdapter.notifyDataSetChanged();
+
+        if (query.contains("Login")){
+            try {
+                getFingerprintAuth(query);
+            } catch (java.security.cert.CertificateException e) {
+                e.printStackTrace();
             }
-        }, 3000);
+        }
 
+        apiEndpoints = new ApiEndpoints(this) ;
+        apiEndpoints.chatMessage(query);
 
     }
 
-    private void getFingerprintAuth() throws java.security.cert.CertificateException {
+    private void getFingerprintAuth(String query) throws java.security.cert.CertificateException {
         Collections.reverse(chatsList);
         chatsList.add(new ChatsPOJO("Please authenticate by placing your finger on the fingerprint sensor.", Constants.LIST_TYPE_RESPONSE)) ;
         chatsList.add(new ChatsPOJO(R.drawable.ic_fingerprint, Constants.LIST_TYPE_RESPONSE_IMAGE)) ;
@@ -268,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 if (initCipher()) {
                     cryptoObject = new FingerprintManager.CryptoObject(cipher);
-                    FingerprintHandler helper = new FingerprintHandler(this);
+                    FingerprintHandler helper = new FingerprintHandler(this, query);
                     helper.startAuth(fingerprintManager, cryptoObject);
                 }
             }
@@ -285,18 +279,78 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
         EventBus.getDefault().unregister(this);
-        super.onStop();
+        super.onDestroy();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void postMessage(ChatsPOJO chatsPOJO){
+
+        loadingDots.setAutoPlay(false);
+        loadingDots.setVisibility(View.GONE);
+        rvSuggestion.setVisibility(View.VISIBLE);
+
         Collections.reverse(chatsList);
         chatsList.add(chatsPOJO) ;
         Collections.reverse(chatsList);
         chatsAdapter.notifyDataSetChanged();
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleSuccessfulAuthentication(SuccessfulAuthEvent successfulAuthEvent){
+        if (successfulAuthEvent.isSuccessful()){
+            postMessage(new ChatsPOJO("Authentication Success! Processing your request...", Constants.LIST_TYPE_RESPONSE));
+
+            apiEndpoints = new ApiEndpoints(this) ;
+            apiEndpoints.chatMessage(successfulAuthEvent.getOriginalQuery());
+        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleVolleyError(VolleyErrorEvent volleyErrorEvent){
+        postMessage(new ChatsPOJO("There seems to be a problem connecting to the server. Try again!", Constants.LIST_TYPE_RESPONSE));
+        postMessage(new ChatsPOJO(R.drawable.ic_sad, Constants.LIST_TYPE_RESPONSE_IMAGE));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     *
+     *
+     * DO
+     * NOT
+     * COME DOWN
+     * HERE
+     * PLEAAAAAASEEE
+     *
+     *
+     *
+     * */
+
+
 
 
 

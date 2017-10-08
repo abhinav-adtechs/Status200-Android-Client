@@ -18,9 +18,11 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
 
     private CancellationSignal cancellationSignal;
     private Context context;
+    private String query ;
 
-    public FingerprintHandler(Context mContext) {
+    public FingerprintHandler(Context mContext, String query) {
         context = mContext;
+        this.query = query ;
     }
 
     public void startAuth(FingerprintManager manager, FingerprintManager.CryptoObject cryptoObject) {
@@ -53,7 +55,8 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
     @Override
     public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
         Log.i(TAG, "onAuthenticationSucceeded: ");
-        EventBus.getDefault().postSticky(new ChatsPOJO("Authentication Success! Processing your request...", Constants.LIST_TYPE_RESPONSE));
+        /*EventBus.getDefault().postSticky(new ChatsPOJO("Authentication Success! Processing your request...", Constants.LIST_TYPE_RESPONSE));*/
+        EventBus.getDefault().postSticky(new SuccessfulAuthEvent(true, query));
     }
 
 }
