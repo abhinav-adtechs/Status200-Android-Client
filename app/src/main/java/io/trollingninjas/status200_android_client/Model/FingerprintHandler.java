@@ -53,7 +53,7 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
     @Override
     public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
         Log.i(TAG, "onAuthenticationSucceeded: ");
-        EventBus.getDefault().post(new ChatsPOJO("Authentication Error! Sorry couldn't process your request.", Constants.LIST_TYPE_RESPONSE));
+        EventBus.getDefault().postSticky(new ChatsPOJO("Authentication Success! Processing your request...", Constants.LIST_TYPE_RESPONSE));
     }
 
 }

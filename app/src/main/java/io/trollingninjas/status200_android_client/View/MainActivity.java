@@ -108,12 +108,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this) ;
+        EventBus.getDefault().register(this);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         /*getSupportActionBar().setLogo(R.drawable.globe);*/
 
-        EventBus.getDefault().register(this);
 
         ivSend.setOnClickListener(this);
         ivMicrophone.setOnClickListener(this);
