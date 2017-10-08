@@ -57,6 +57,8 @@ import io.trollingninjas.status200_android_client.Model.SuccessfulAuthEvent;
 import io.trollingninjas.status200_android_client.Model.VolleyErrorEvent;
 import io.trollingninjas.status200_android_client.R;
 
+import static io.trollingninjas.status200_android_client.Model.Constants.LIST_TYPE_REQUEST;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -170,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(int pos) {
                 Log.i("TAG", "onClick: ");
-                postMessage(new ChatsPOJO(suggestionsList.get(pos).getChatMessage(), Constants.LIST_TYPE_REQUEST));
+                postMessage(new ChatsPOJO(suggestionsList.get(pos).getChatMessage(), LIST_TYPE_REQUEST));
                 getResponse(suggestionsList.get(pos).getChatMessage());
             }
         }) ;
@@ -182,10 +184,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setSuggestionData() {
-        suggestionsList.add(new ChatsPOJO("Pull changes to server", Constants.LIST_TYPE_REQUEST)) ;
-        suggestionsList.add(new ChatsPOJO("Show status", Constants.LIST_TYPE_REQUEST)) ;
-        suggestionsList.add(new ChatsPOJO("Set a reminder", Constants.LIST_TYPE_REQUEST)) ;
-        suggestionsList.add(new ChatsPOJO("Show Weekly Report", Constants.LIST_TYPE_REQUEST)) ;
+        suggestionsList.add(new ChatsPOJO("Pull changes to server", LIST_TYPE_REQUEST)) ;
+        suggestionsList.add(new ChatsPOJO("Show status", LIST_TYPE_REQUEST)) ;
+        suggestionsList.add(new ChatsPOJO("Set a reminder", LIST_TYPE_REQUEST)) ;
+        suggestionsList.add(new ChatsPOJO("Show Weekly Report", LIST_TYPE_REQUEST)) ;
 
         suggestionsAdapter.notifyDataSetChanged();
     }
@@ -193,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setData() {
         chatsList.add(new ChatsPOJO(R.drawable.ic_hello, Constants.LIST_TYPE_RESPONSE_IMAGE)) ;
         chatsList.add(new ChatsPOJO("Hi There!", Constants.LIST_TYPE_RESPONSE)) ;
-        chatsList.add(new ChatsPOJO("What can I do for you today?", Constants.LIST_TYPE_RESPONSE)) ;
+        chatsList.add(new ChatsPOJO("What can I digital for you today?", Constants.LIST_TYPE_RESPONSE)) ;
         Collections.reverse(chatsList);
 
         chatsAdapter.notifyDataSetChanged();
@@ -207,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String query = etQueryText.getText().toString() ;
                 Log.i("TAG", "onClick: " + query);
                 Collections.reverse(chatsList);
-                chatsList.add(new ChatsPOJO(query, Constants.LIST_TYPE_REQUEST)) ;
+                chatsList.add(new ChatsPOJO(query, LIST_TYPE_REQUEST)) ;
                 Collections.reverse(chatsList);
                 chatsAdapter.notifyDataSetChanged();
                 getResponse(query) ;
@@ -295,6 +297,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         chatsList.add(chatsPOJO) ;
         Collections.reverse(chatsList);
         chatsAdapter.notifyDataSetChanged();
+
+        Log.i("TAG", "postMessage: " + chatsPOJO.isGithub() + " " + chatsPOJO.isDo());
+
+        if (chatsPOJO.isDo()){
+            Collections.reverse(chatsList);
+            chatsList.add(new ChatsPOJO(R.drawable.digital, Constants.LIST_TYPE_RESPONSE_IMAGE)) ;
+            Collections.reverse(chatsList);
+        }else if (chatsPOJO.isGithub()){
+            Collections.reverse(chatsList);
+            chatsList.add(new ChatsPOJO(R.drawable.gh, Constants.LIST_TYPE_RESPONSE_IMAGE)) ;
+            Collections.reverse(chatsList);
+        }
+
+        if (chatsPOJO.getSuggestionsList() != null){
+            suggestionsList.clear();
+            for (int i = 0; i < chatsPOJO.getSuggestionsList().size(); i++) {
+                suggestionsList.add(new ChatsPOJO(chatsPOJO.getSuggestionsList().get(i), Constants.LIST_TYPE_REQUEST)) ;
+            }
+            suggestionsAdapter.notifyDataSetChanged();
+
+        }
+
     }
 
 

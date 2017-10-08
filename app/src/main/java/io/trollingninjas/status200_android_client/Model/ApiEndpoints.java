@@ -13,16 +13,21 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ApiEndpoints {
 
     private Context context ;
     private RequestQueue rq ;
+
+    private ChatsPOJO finalData ;
 
     public ApiEndpoints(Context context) {
         this.context = context;
@@ -53,7 +58,23 @@ public class ApiEndpoints {
                             JSONObject jsonObject = new JSONObject(response) ;
 
                             String responseMessage = jsonObject.getString("message") ;
-                            EventBus.getDefault().postSticky(new ChatsPOJO(responseMessage, Constants.LIST_TYPE_RESPONSE));
+
+                            finalData = new ChatsPOJO(responseMessage, Constants.LIST_TYPE_RESPONSE) ;
+
+                            if (jsonObject.getString("tags").contains("github"))
+                                finalData.setGithub(true);
+                            if (jsonObject.getString("tags").contains("do"))
+                                finalData.setDo(true);
+
+                            List<String> suggestions = new ArrayList<>() ;
+
+                            for (int i = 0; i < jsonObject.getJSONArray("suggestions").length(); i++) {
+                                suggestions.add(jsonObject.getJSONArray("suggestions").getString(i)) ;
+                            }
+
+                            finalData.setSuggestionsList(suggestions);
+
+                            EventBus.getDefault().postSticky(finalData);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
