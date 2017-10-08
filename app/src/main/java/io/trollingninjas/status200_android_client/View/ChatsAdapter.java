@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +22,19 @@ public class ChatsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private Context context ;
     private List<ChatsPOJO> chatsList;
+    private OnItemClickListener onItemClickListener ;
+    private boolean flag = false ;
+
+    public interface OnItemClickListener{
+        void onClick(int pos) ;
+    }
+
+    public ChatsAdapter(Context context, List<ChatsPOJO> chatsList, OnItemClickListener onItemClickListener) {
+        this.context = context;
+        this.chatsList = chatsList;
+        this.onItemClickListener = onItemClickListener;
+        flag = true ;
+    }
 
     public ChatsAdapter(Context context, List<ChatsPOJO> chatsList) {
         this.context = context;
@@ -56,6 +70,12 @@ public class ChatsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             ChatsViewHolder holderRequest = (ChatsViewHolder) holder ;
             holderRequest.tvChatRequest.setText(chatsList.get(position).getChatMessage());
 
+            if (flag){
+
+                holderRequest.flChatBody.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                holderRequest.bindListener(position);
+            }
+
 
         }else if (getItemViewType(position) == Constants.LIST_TYPE_RESPONSE){
 
@@ -63,6 +83,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             holderResponse.tvChatResponse.setText(chatsList.get(position).getChatMessage());
             holderResponse.tvChatResponse.setGravity(Gravity.LEFT);
+
         }else if (getItemViewType(position) == Constants.LIST_TYPE_RESPONSE_IMAGE){
 
             ChatResponseImageViewHolder holderResponseImage = (ChatResponseImageViewHolder) holder ;
@@ -79,11 +100,22 @@ public class ChatsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public class ChatsViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tvChatRequest ;
+        private FrameLayout flChatBody ;
 
         public ChatsViewHolder(View itemView) {
             super(itemView);
 
             tvChatRequest = (TextView) itemView.findViewById(R.id.item_rv_chats_tv_chat_request) ;
+            flChatBody = (FrameLayout) itemView.findViewById(R.id.item_rv_chats_frame_layout) ;
+        }
+
+        public void bindListener(final int position){
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onItemClickListener.onClick(position);
+                }
+            });
         }
     }
 

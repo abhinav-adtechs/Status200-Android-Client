@@ -35,25 +35,25 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
     @Override
     public void onAuthenticationError(int errMsgId, CharSequence errString) {
         Log.i(TAG, "onAuthenticationError: ");
-        EventBus.getDefault().post(new ChatsPOJO("You are authenticated. Processing your request...", Constants.LIST_TYPE_RESPONSE));
+        EventBus.getDefault().post(new ChatsPOJO("Authentication Error! Sorry couldn't process your request.", Constants.LIST_TYPE_RESPONSE));
     }
 
     @Override
     public void onAuthenticationFailed() {
         Log.i(TAG, "onAuthenticationFailed: ");
-        EventBus.getDefault().post(new ChatsPOJO("You are authenticated. Processing your request...", Constants.LIST_TYPE_RESPONSE));
+        EventBus.getDefault().post(new ChatsPOJO("Authentication Error! Sorry couldn't process your request.", Constants.LIST_TYPE_RESPONSE));
     }
 
     @Override
     public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
         Log.i(TAG, "onAuthenticationHelp: ");
-        EventBus.getDefault().post(new ChatsPOJO("You are authenticated. Processing your request...", Constants.LIST_TYPE_RESPONSE));
+        EventBus.getDefault().post(new ChatsPOJO("Authentication Error! Sorry couldn't process your request.", Constants.LIST_TYPE_RESPONSE));
     }
 
     @Override
     public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
         Log.i(TAG, "onAuthenticationSucceeded: ");
-        EventBus.getDefault().post(new ChatsPOJO("You are authenticated. Processing your request...", Constants.LIST_TYPE_RESPONSE));
+        EventBus.getDefault().post(new ChatsPOJO("Authentication Error! Sorry couldn't process your request.", Constants.LIST_TYPE_RESPONSE));
     }
 
 }

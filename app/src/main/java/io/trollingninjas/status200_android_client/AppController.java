@@ -20,6 +20,7 @@ public class AppController extends Application {
                 .build();
 
         FontsOverride.setDefaultFont(this, "MONOSPACE", "OpenSans-Light.ttf");
+        FontsOverride.setDefaultFont(this, "SANS-SERIF", "OpenSans-Bold.ttf");
     }
 
     public AppComponent get() {

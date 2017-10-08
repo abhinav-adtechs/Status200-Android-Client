@@ -17,6 +17,7 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -74,11 +75,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private List<ChatsPOJO> chatsList = new ArrayList<>();
     private ChatsAdapter chatsAdapter ;
-    private LayoutAnimationController controller ;
 
     private static final String KEY_NAME = "keyy";
     LoadingDots loadingDots ;
 
+
+    /**SUGGESTIONSSSSUGGESTIONSSSSUGGESTIONSSSSUGGESTIONSSS
+     * */
+    @BindView(R.id.activity_main_rv_suggestion)
+    RecyclerView rvSuggestion ;
+
+    private List<ChatsPOJO> suggestionsList = new ArrayList<>() ;
+    private ChatsAdapter suggestionsAdapter ;
+
+    /**SUGGESTIONSSSSUGGESTIONSSSSUGGESTIONSSSSUGGESTIONSSS
+     * */
 
     KeyguardManager keyguardManager ;
     FingerprintManager fingerprintManager ;
@@ -87,6 +98,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     KeyGenerator keyGenerator ;
     Cipher cipher ;
 
+    @BindView(R.id.activity_main_toolbar)
+    Toolbar toolbar ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +108,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this) ;
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+        /*getSupportActionBar().setLogo(R.drawable.globe);*/
 
         EventBus.getDefault().register(this);
 
@@ -141,12 +159,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         chatsAdapter = new ChatsAdapter(this, chatsList) ;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL,  true) ;
         rvChatData.setLayoutManager(layoutManager);
-        controller = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation_fall_down);
-        rvChatData.setLayoutAnimation(controller);
         rvChatData.setItemAnimator(new DefaultItemAnimator());
         rvChatData.setAdapter(chatsAdapter);
-
         setData() ;
+
+
+
+        suggestionsAdapter = new ChatsAdapter(this, suggestionsList, new ChatsAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(int pos) {
+                Log.i("TAG", "onClick: ");
+                postMessage(new ChatsPOJO(suggestionsList.get(pos).getChatMessage(), Constants.LIST_TYPE_REQUEST));
+                getResponse(suggestionsList.get(pos).getChatMessage());
+            }
+        }) ;
+        RecyclerView.LayoutManager layoutManager1 = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false) ;
+        rvSuggestion.setLayoutManager(layoutManager1);
+        rvSuggestion.setAdapter(suggestionsAdapter);
+        setSuggestionData() ;
+
+    }
+
+    private void setSuggestionData() {
+        suggestionsList.add(new ChatsPOJO("Pull changes to server", Constants.LIST_TYPE_REQUEST)) ;
+        suggestionsList.add(new ChatsPOJO("Show status", Constants.LIST_TYPE_REQUEST)) ;
+        suggestionsList.add(new ChatsPOJO("Set a reminder", Constants.LIST_TYPE_REQUEST)) ;
+        suggestionsList.add(new ChatsPOJO("Show Weekly Report", Constants.LIST_TYPE_REQUEST)) ;
+
+        suggestionsAdapter.notifyDataSetChanged();
     }
 
     private void setData() {
@@ -179,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void getResponse(final String query) {
-
+        rvSuggestion.setVisibility(View.INVISIBLE);
         loadingDots.setAutoPlay(true);
         loadingDots.setVisibility(View.VISIBLE);
         new Handler().postDelayed(new Runnable() {
@@ -187,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
                 loadingDots.setAutoPlay(false);
                 loadingDots.setVisibility(View.GONE);
+                rvSuggestion.setVisibility(View.VISIBLE);
 
                 Collections.reverse(chatsList);
                 chatsList.add(new ChatsPOJO("Thanks for asking me: " + query, Constants.LIST_TYPE_RESPONSE)) ;
@@ -255,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void postMessage(ChatsPOJO chatsPOJO){
         Collections.reverse(chatsList);
-        chatsList.add(new ChatsPOJO(chatsPOJO.getChatMessage(), Constants.LIST_TYPE_RESPONSE)) ;
+        chatsList.add(chatsPOJO) ;
         Collections.reverse(chatsList);
         chatsAdapter.notifyDataSetChanged();
     }
