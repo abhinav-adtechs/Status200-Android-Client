@@ -313,20 +313,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void handleVolleyError(VolleyErrorEvent volleyErrorEvent){
         postMessage(new ChatsPOJO("There seems to be a problem connecting to the server. Try again!", Constants.LIST_TYPE_RESPONSE));
         postMessage(new ChatsPOJO(R.drawable.ic_sad, Constants.LIST_TYPE_RESPONSE_IMAGE));
+        Log.e("TAG", "handleVolleyError: "+ volleyErrorEvent.getErrorMessage() );
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

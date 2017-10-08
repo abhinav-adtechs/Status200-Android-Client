@@ -35,7 +35,7 @@ public class ApiEndpoints {
         String url = "";
 
         try {
-            url = "http://139.59.21.68:8000/chat?message=" + URLEncoder.encode(query, "UTF-8") ;
+            url = "http://139.59.21.68:8001/chat?message=" + URLEncoder.encode(query, "UTF-8") ;
             Log.i("TAG", "chatMessage: " + url);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

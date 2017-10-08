@@ -43,6 +43,7 @@ dependencies {
 
     /*Networking Needs*/
     compile 'com.android.volley:volley:1.0.0'
+    compile 'com.google.firebase:firebase-messaging:10.0.1'
 
     /*UI Needs*/
     compile 'com.eyalbira.loadingdots:loading-dots:1.0.2'
@@ -50,3 +51,6 @@ dependencies {
 
 
 }
+
+
+apply plugin: 'com.google.gms.google-services'
