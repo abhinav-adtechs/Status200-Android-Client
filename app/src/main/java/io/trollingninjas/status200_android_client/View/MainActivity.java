@@ -22,8 +22,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 
 import com.eyalbira.loadingdots.LoadingDots;
@@ -54,7 +52,6 @@ import butterknife.ButterKnife;
 import io.trollingninjas.status200_android_client.Model.ChatsPOJO;
 import io.trollingninjas.status200_android_client.Model.Constants;
 import io.trollingninjas.status200_android_client.Model.FingerprintHandler;
-import io.trollingninjas.status200_android_client.Model.CipherHelper;
 import io.trollingninjas.status200_android_client.R;
 
 
@@ -354,14 +351,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //Generate the key//
             keyGenerator.generateKey();
 
-        } catch (KeyStoreException
-                | NoSuchAlgorithmException
-                | NoSuchProviderException
-                | InvalidAlgorithmParameterException
-                | IOException exc) {
+        } catch (KeyStoreException | NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException | IOException | java.security.cert.CertificateException exc) {
             exc.printStackTrace();
-        } catch (java.security.cert.CertificateException e) {
-            e.printStackTrace();
         }
     }
 
