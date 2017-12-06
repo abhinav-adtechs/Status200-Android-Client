@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setData() {
         chatsList.add(new ChatsPOJO(R.drawable.ic_hello, Constants.LIST_TYPE_RESPONSE_IMAGE)) ;
         chatsList.add(new ChatsPOJO("Hi There!", Constants.LIST_TYPE_RESPONSE)) ;
-        chatsList.add(new ChatsPOJO("What can I digital for you today?", Constants.LIST_TYPE_RESPONSE)) ;
+        chatsList.add(new ChatsPOJO("What can I do for you today?", Constants.LIST_TYPE_RESPONSE)) ;
         Collections.reverse(chatsList);
 
         chatsAdapter.notifyDataSetChanged();
